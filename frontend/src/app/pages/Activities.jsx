@@ -99,7 +99,7 @@ const Activities = () => {
             initial={{ scale: 1.1, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
-            src="https://images.unsplash.com/photo-1462557881996-79ed8f9ca4c5?q=80&w=1170&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1664867884843-8c70d19fe6f9?q=80&w=1331&auto=format&fit=crop"
             alt="Tourist Spots Banner"
             className="absolute inset-0 w-full h-full object-cover z-0"
           />

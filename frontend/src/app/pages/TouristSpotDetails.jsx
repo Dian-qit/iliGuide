@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { LoaderIcon, NotebookPen, MapPin, ChevronRight } from "lucide-react";
+import { LoaderIcon, NotebookPen, MapPin, ChevronRight, Ticket } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../lib/axios.js";
 import ActivityCard from "../components/ActivityCard.jsx";
@@ -11,13 +11,12 @@ import Navbar from "../components/Navbar.jsx";
 
 const REVIEWS_PREVIEW = 3;
 
-// Global Entry Animation Configurations
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] } 
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
@@ -25,25 +24,22 @@ const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.12,
-    },
+    transition: { staggerChildren: 0.12 },
   },
 };
 
 const TouristSpotDetails = () => {
-  const [touristSpot, setTouristSpot] = useState(null);
-  const [activities, setActivities] = useState([]);
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [touristSpot, setTouristSpot]       = useState(null);
+  const [activities, setActivities]         = useState([]);
+  const [reviews, setReviews]               = useState([]);
+  const [loading, setLoading]               = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id }   = useParams();
 
   useEffect(() => {
     if (!id) return;
-
     let timeoutId;
 
     const fetchAll = async () => {
@@ -69,7 +65,6 @@ const TouristSpotDetails = () => {
     return () => clearTimeout(timeoutId);
   }, [id]);
 
-  // Re-fetch reviews after a new one is submitted
   const handleReviewSubmitted = async () => {
     try {
       const res = await api.get(`/reviews/spot/${id}`);
@@ -82,32 +77,33 @@ const TouristSpotDetails = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center gap-3">
-        <span className="loading loading-dots loading-xl text-success"></span>{" "}
+        <span className="loading loading-dots loading-xl text-success"></span>
       </div>
     );
   }
 
   if (!touristSpot) {
     return (
-      <div className="min-h-screen flex items-center justify-center 0">
+      <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-500">Tourist spot not found.</p>
       </div>
     );
   }
 
-  const previewReviews = reviews.slice(0, REVIEWS_PREVIEW);
-  const hasMoreReviews = reviews.length > REVIEWS_PREVIEW;
+  const previewReviews  = reviews.slice(0, REVIEWS_PREVIEW);
+  const hasMoreReviews  = reviews.length > REVIEWS_PREVIEW;
+  const isFree          = parseFloat(touristSpot.EntranceFee) === 0;
 
   return (
     <div className="overflow-x-hidden min-h-screen text-gray-800">
       <Navbar />
 
-      <div className="h-20 w-full bg-black"></div>
+      <div className="h-20 w-full bg-black" />
 
       <div className="max-w-7xl mx-auto px-4 py-5">
-        
-        {/* ── Hero Section ── */}
-        <motion.div 
+
+        {/* ── Hero ── */}
+        <motion.div
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
@@ -134,10 +130,24 @@ const TouristSpotDetails = () => {
               {touristSpot.Description}
             </motion.p>
 
-            <motion.div variants={fadeInUp} className=" border border-gray-200 rounded-xl p-5 shadow-sm h-50 flex flex-col justify-center">
-              <h2 className="text-lg font-semibold mb-3">
-                Destination Actions
-              </h2>
+            {/* ── Entrance Fee Badge ── */}
+            <motion.div variants={fadeInUp} className="flex items-center gap-3">
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border ${
+                isFree
+                  ? "bg-[#006c46]/10 border-[#006c46]/30 text-[#006c46]"
+                  : "bg-[#16A34A]/10 border-[#16A34A]/30 text-[#16A34A]"
+              }`}>
+                <Ticket className="size-4" />
+                {isFree
+                  ? "Free Admission"
+                  : `Entrance Fee: ₱${parseFloat(touristSpot.EntranceFee).toFixed(2)}`
+                }
+              </div>
+            </motion.div>
+
+            {/* ── Destination Actions ── */}
+            <motion.div variants={fadeInUp} className="border border-gray-200 rounded-xl p-5 shadow-sm h-50 flex flex-col justify-center">
+              <h2 className="text-lg font-semibold mb-3">Destination Actions</h2>
               <button
                 className="font-medium text-[#006c46] border-[#006c46] border-2 w-full flex items-center gap-2 justify-center rounded-lg py-2 my-2 hover:bg-[#006c46] hover:text-white transition-colors cursor-pointer"
                 onClick={() => setShowReviewForm(true)}
@@ -155,7 +165,7 @@ const TouristSpotDetails = () => {
 
         {/* ── Experience + Activities + Map ── */}
         <div className="mt-15 flex flex-col lg:flex-row gap-20">
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -171,22 +181,17 @@ const TouristSpotDetails = () => {
 
             {activities.length > 0 && (
               <motion.section variants={fadeInUp} className="mt-10">
-                <h2 className="text-3xl font-light mb-4">
-                  Destination Activities
-                </h2>
+                <h2 className="text-3xl font-light mb-4">Destination Activities</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
                   {activities.map((activity) => (
-                    <ActivityCard
-                      key={activity.ActivityID}
-                      activity={activity}
-                    />
+                    <ActivityCard key={activity.ActivityID} activity={activity} />
                   ))}
                 </div>
               </motion.section>
             )}
           </motion.div>
 
-          <motion.section 
+          <motion.section
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -205,7 +210,7 @@ const TouristSpotDetails = () => {
         </div>
 
         {/* ── Reviews ── */}
-        <motion.div 
+        <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
@@ -218,7 +223,7 @@ const TouristSpotDetails = () => {
               See what our community has to say about this experience.
             </p>
           </motion.div>
-          
+
           {reviews.length > 0 && (
             <div className="mt-6">
               <div className="flex items-center justify-between mb-4">
@@ -231,14 +236,9 @@ const TouristSpotDetails = () => {
                   </button>
                 )}
               </div>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {previewReviews.map((review, idx) => (
-                  <motion.div 
-                    key={review.ReviewID} 
-                    variants={fadeInUp}
-                    custom={idx}
-                  >
+                  <motion.div key={review.ReviewID} variants={fadeInUp} custom={idx}>
                     <ReviewCard review={review} />
                   </motion.div>
                 ))}
@@ -246,11 +246,11 @@ const TouristSpotDetails = () => {
             </div>
           )}
         </motion.div>
+
       </div>
 
       <Footer />
 
-      {/* ── Smooth Modal Backdrop Fade ── */}
       <AnimatePresence>
         {showReviewForm && (
           <ReviewFormCard

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSignup } from '../hooks/useSignup.js'
 import { useNavigate } from 'react-router'
+import { ArrowLeft } from 'lucide-react'
 
 const Signup = () => {
   const [name, setName] = useState('')
@@ -19,8 +20,16 @@ const Signup = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
       <div className="bg-white border border-[#EBE8DF] shadow-lg p-10 w-full max-w-md">
 
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1 text-xs text-gray-400 hover:text-[#16A34A] transition-colors duration-200 mb-6 cursor-pointer"
+        >
+          <ArrowLeft className="size-3.5" />
+          Back
+        </button>
+
         <h5 className="text-[#16A34A] text-xs tracking-[0.3em] font-bold mb-2">
-          JOIN TERRAVIBE
+          JOIN ILIGUIDE
         </h5>
         <h2 className="text-3xl font-light text-[#1C2421] mb-8">
           Create Account

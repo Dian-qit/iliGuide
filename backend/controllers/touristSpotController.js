@@ -31,10 +31,10 @@ export const getTouristSpotById = async (req, res, next) => {
 // Create a new tourist spot
 export const createNewTouristSpot = async (req, res, next) => {
     try {
-        const { name, address, city, description, experience, imageURL, embedMapURL } = req.body
+        const { name, address, city, description, experience, imageURL, embedMapURL, entranceFee } = req.body
         if (!name || !city)
             return res.status(400).send({ message: "Name and city are required" })
-        const spot = await createTouristSpot(name, address, city, description, imageURL, embedMapURL)
+        const spot = await createTouristSpot(name, address, city, description, experience, imageURL, embedMapURL, entranceFee)
         res.status(201).send(spot[0])
     } catch (err) {
         next(err)
@@ -45,10 +45,10 @@ export const createNewTouristSpot = async (req, res, next) => {
 export const updateTouristSpotById = async (req, res, next) => {
     try {
         const id = req.params.id
-        const { name, address, city, description, experience, imageURL, embedMapURL } = req.body
+        const { name, address, city, description, experience, imageURL, embedMapURL, entranceFee } = req.body
         if (!name || !city)
             return res.status(400).send({ message: "Name and city are required" })
-        const spot = await updateTouristSpot(id, name, address, city, description, imageURL, embedMapURL)
+        const spot = await updateTouristSpot(id, name, address, city, description, experience, imageURL, embedMapURL, entranceFee)
         if (spot.length === 0) return res.status(404).send({ message: "Tourist spot not found" })
         res.send(spot[0])
     } catch (err) {

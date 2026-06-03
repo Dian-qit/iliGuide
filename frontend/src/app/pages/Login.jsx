@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useLogin } from '../hooks/useLogin'
 import { useNavigate } from 'react-router'
+import { ArrowLeft } from 'lucide-react'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -17,7 +18,15 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
       <div className="bg-white border border-[#EBE8DF] shadow-lg p-10 w-full max-w-md">
-        
+
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1 text-xs text-gray-400 hover:text-[#16A34A] transition-colors duration-200 mb-6 cursor-pointer"
+        >
+          <ArrowLeft className="size-3.5" />
+          Back
+        </button>
+
         <h5 className="text-[#16A34A] text-xs tracking-[0.3em] font-bold mb-2">
           WELCOME BACK
         </h5>

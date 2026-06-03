@@ -17,22 +17,22 @@ export async function getTouristSpot(id) {
 }
 
 // Create a new tourist spot
-export async function createTouristSpot(name, address, city, description, experience, imageURL, embedMapURL) {
+export async function createTouristSpot(name, address, city, description, experience, imageURL, embedMapURL, entranceFee) {
     const [result] = await pool.query(`
-        INSERT INTO TouristSpot (Name, Address, City, Description, Experience, ImageURL, EmbedMapURL)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        `, [name, address, city, description, experience, imageURL, embedMapURL])
+        INSERT INTO TouristSpot (Name, Address, City, Description, Experience, ImageURL, EmbedMapURL, EntranceFee)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `, [name, address, city, description, experience, imageURL, embedMapURL, entranceFee ?? 0])
     const id = result.insertId
     return getTouristSpot(id)
 }
 
 // Update a tourist spot by id
-export async function updateTouristSpot(id, name, address, city, description, experience, imageURL, embedMapURL) {
+export async function updateTouristSpot(id, name, address, city, description, experience, imageURL, embedMapURL, entranceFee) {
     await pool.query(`
         UPDATE TouristSpot
-        SET Name = ?, Address = ?, City = ?, Description = ?, Experience = ?, ImageURL = ?, EmbedMapURL = ?
+        SET Name = ?, Address = ?, City = ?, Description = ?, Experience = ?, ImageURL = ?, EmbedMapURL = ?, EntranceFee = ?
         WHERE DestinationID = ?
-        `, [name, address, city, description, experience, imageURL, embedMapURL, id])
+        `, [name, address, city, description, experience, imageURL, embedMapURL, entranceFee ?? 0, id])
     return getTouristSpot(id)
 }
 
