@@ -40,7 +40,27 @@ const TouristSpots = () => {
       try {
         const res = await axios.get("http://localhost:8080/api/spots/");
         console.log(res.data);
-        setTouristSpots(res.data);
+        
+        // Fetch reviews for each spot and calculate average rating
+        const spotsWithRatings = await Promise.all(
+          res.data.map(async (spot) => {
+            try {
+              const reviewsRes = await axios.get(`http://localhost:8080/api/reviews/spot/${spot.DestinationID}`);
+              if (reviewsRes.data && reviewsRes.data.length > 0) {
+                const avgRating = (
+                  reviewsRes.data.reduce((sum, review) => sum + review.Rating, 0) / 
+                  reviewsRes.data.length
+                ).toFixed(1);
+                return { ...spot, AverageRating: parseFloat(avgRating) };
+              }
+            } catch (error) {
+              console.error(`Error fetching reviews for spot ${spot.DestinationID}:`, error);
+            }
+            return spot;
+          })
+        );
+        
+        setTouristSpots(spotsWithRatings);
       } catch (error) {
         console.error("Error fetching tourist spots data:", error);
       } finally {

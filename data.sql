@@ -187,4 +187,4 @@ SELECT 'TouristSpot' AS TableName, COUNT(*) AS Records FROM TouristSpot
 UNION ALL
 SELECT 'Activities'  AS TableName, COUNT(*) AS Records FROM Activities
 UNION ALL
-SELECT 'Reviews'     AS TableName, COUNT(*) AS Records FROM Reviews;
+SELECT 'Reviews'     AS TableName, COUNT(*) AS Records FROM Reviews;  

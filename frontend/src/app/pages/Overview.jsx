@@ -83,6 +83,7 @@ const SpotCard = ({ spot }) => {
 const Overview = () => {
   const [activeSlide, setActiveSlide] = useState(1);
   const [touristSpots, setTouristSpots] = useState([]);
+  const [previewSpots, setPreviewSpots] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch tourist spots
@@ -92,7 +93,31 @@ const Overview = () => {
       const startTime = Date.now();
       try {
         const res = await axios.get("http://localhost:8080/api/spots/");
-        setTouristSpots(res.data);
+        // Fetch reviews for each spot and calculate average rating
+        const spotsWithRatings = await Promise.all(
+          res.data.map(async (spot) => {
+            try {
+              const reviewsRes = await axios.get(`http://localhost:8080/api/reviews/spot/${spot.DestinationID}`);
+              if (reviewsRes.data && reviewsRes.data.length > 0) {
+                const avgRating = (
+                  reviewsRes.data.reduce((sum, review) => sum + review.Rating, 0) / 
+                  reviewsRes.data.length
+                ).toFixed(1);
+                return { ...spot, AverageRating: parseFloat(avgRating) };
+              }
+            } catch (error) {
+              console.error(`Error fetching reviews for spot ${spot.DestinationID}:`, error);
+            }
+            return spot;
+          })
+        );
+        
+        // Sort by rating (highest first), then get top 3. If less than 3 have ratings, get first 3 overall
+        const ratedSpots = spotsWithRatings.filter(s => s.AverageRating).sort((a, b) => b.AverageRating - a.AverageRating);
+        const topSpots = ratedSpots.length >= 3 ? ratedSpots.slice(0, 3) : spotsWithRatings.slice(0, 3);
+        
+        setTouristSpots(spotsWithRatings);
+        setPreviewSpots(topSpots);
       } catch (error) {
         console.error("Error fetching tourist spots:", error);
       } finally {
@@ -133,9 +158,8 @@ const Overview = () => {
   const spotOne = touristSpots.find((s) => s.DestinationID === 9);
   const spotTwo = touristSpots.find((s) => s.DestinationID === 8);
 
-  // Get first 3 tourist spots to showcase
-  const previewSpots = touristSpots.slice(0, 3);
-
+  // Use previewSpots from state (top 3 rated or first 3)
+  const displaySpots = previewSpots.length > 0 ? previewSpots : touristSpots.slice(0, 3);
   return (
     <div className="relative min-h-screen text-gray-800 overflow-x-hidden">
       {/* Background Decorative Lines Animation */}
@@ -387,7 +411,7 @@ const Overview = () => {
             variants={staggerContainer}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-6 place-items-center"
           >
-            {previewSpots.map((spot) => (
+            {displaySpots.map((spot) => (
               <motion.div
                 key={spot.id || spot._id || spot.DestinationID}
                 variants={fadeInUp}

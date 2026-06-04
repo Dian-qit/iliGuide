@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
-import { LoaderIcon, NotebookPen, MapPin, ChevronRight, Ticket } from "lucide-react";
+import { useParams } from "react-router"; 
+import { LoaderIcon, NotebookPen, MapPin, ChevronDown, ChevronUp, Ticket, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../lib/axios.js";
 import ActivityCard from "../components/ActivityCard.jsx";
@@ -34,9 +34,9 @@ const TouristSpotDetails = () => {
   const [reviews, setReviews]               = useState([]);
   const [loading, setLoading]               = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [showAllReviews, setShowAllReviews] = useState(false); 
 
-  const navigate = useNavigate();
-  const { id }   = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     if (!id) return;
@@ -90,9 +90,15 @@ const TouristSpotDetails = () => {
     );
   }
 
-  const previewReviews  = reviews.slice(0, REVIEWS_PREVIEW);
-  const hasMoreReviews  = reviews.length > REVIEWS_PREVIEW;
-  const isFree          = parseFloat(touristSpot.EntranceFee) === 0;
+  const displayedReviews = showAllReviews ? reviews : reviews.slice(0, REVIEWS_PREVIEW);
+  const hasMoreReviews   = reviews.length > REVIEWS_PREVIEW;
+  const isFree           = parseFloat(touristSpot.EntranceFee) === 0;
+
+  // ── Calculate Average Rating Live ──
+  const totalReviews = reviews.length;
+  const averageRating = totalReviews > 0 
+    ? (reviews.reduce((sum, r) => sum + parseFloat(r.Rating || r.rating || 0), 0) / totalReviews).toFixed(1)
+    : null;
 
   return (
     <div className="overflow-x-hidden min-h-screen text-gray-800">
@@ -119,8 +125,20 @@ const TouristSpotDetails = () => {
 
           <div className="flex flex-col justify-center gap-4 lg:w-1/2">
             <motion.div variants={fadeInUp}>
-              <h1 className="text-5xl font-bold tracking-tight">{touristSpot.Name}</h1>
-              <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
+              <div className="flex flex-wrap items-baseline gap-3">
+                <h1 className="text-5xl font-bold tracking-tight">{touristSpot.Name}</h1>
+                
+                {/* Live Rating Indicator Badge */}
+                {averageRating && (
+                  <div className="flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 px-2.5 py-1 rounded-md text-sm font-semibold shadow-sm">
+                    <Star className="size-4 fill-amber-500 text-amber-500" />
+                    <span>{averageRating}</span>
+                    <span className="text-gray-400 font-normal text-xs">({totalReviews})</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-1 text-gray-500 text-sm mt-2">
                 <MapPin className="size-4 text-[#16A34A]" />
                 <span>{touristSpot.Address}</span>
               </div>
@@ -226,23 +244,43 @@ const TouristSpotDetails = () => {
 
           {reviews.length > 0 && (
             <div className="mt-6">
-              <div className="flex items-center justify-between mb-4">
-                {hasMoreReviews && (
-                  <button
-                    onClick={() => navigate(`/spots/${id}/reviews`)}
-                    className="flex items-center gap-1 text-sm text-green-700 font-medium hover:underline cursor-pointer"
-                  >
-                    See all reviews <ChevronRight className="size-4" />
-                  </button>
-                )}
-              </div>
+              {/* Review Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {previewReviews.map((review, idx) => (
-                  <motion.div key={review.ReviewID} variants={fadeInUp} custom={idx}>
-                    <ReviewCard review={review} />
-                  </motion.div>
-                ))}
+                <AnimatePresence>
+                  {displayedReviews.map((review, idx) => (
+                    <motion.div 
+                      key={review.ReviewID} 
+                      variants={fadeInUp} 
+                      custom={idx}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      <ReviewCard review={review} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
+
+              {/* Show More / Show Less Button Container */}
+              {hasMoreReviews && (
+                <div className="mt-8 flex justify-center">
+                  <button
+                    onClick={() => setShowAllReviews(!showAllReviews)}
+                    className="flex items-center gap-2 px-6 py-2 border-2 border-[#006c46] text-[#006c46] font-medium rounded-full hover:bg-[#006c46] hover:text-white transition-all duration-300 cursor-pointer"
+                  >
+                    {showAllReviews ? (
+                      <>
+                        Show Less <ChevronUp className="size-4" />
+                      </>
+                    ) : (
+                      <>
+                        Show More ({reviews.length - REVIEWS_PREVIEW} more){" "}
+                        <ChevronDown className="size-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </motion.div>

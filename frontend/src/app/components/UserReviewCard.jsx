@@ -22,7 +22,6 @@ const UserReviewCard = ({ review, onDelete, onEdit }) => {
     currentReview.DestinationName ||
     currentReview.Name;
   const spotLocation = [
-    currentReview.City,
     currentReview.Address,
     currentReview.Location,
   ]
