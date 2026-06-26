@@ -22,6 +22,8 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'https://iliguide.vercel.app',
+        'https://ili-guide.vercel.app',
+        'https://ili-guide.vercel.xyz'
     ],
 }))
 
