@@ -229,7 +229,7 @@ const Overview = () => {
 
           <motion.div variants={fadeInUp}>
             <a
-              href="#destinations"
+              href="/tourist-spots"
               className="bg-[#FAF9F6] hover:bg-[#006c46] text-black hover:text-white px-10 py-4 tracking-widest text-[11px] uppercase transition-all duration-300 font-medium shadow-lg cursor-pointer block hover:scale-105"
             >
               Explore Now
