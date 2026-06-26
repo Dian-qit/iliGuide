@@ -19,7 +19,10 @@ app.use(express.json())
 //     origin: 'http://localhost:5173',
 // }))
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: [
+        'http://localhost:5173',
+        'https://iliguide.vercel.app',
+    ],
 }))
 
 
