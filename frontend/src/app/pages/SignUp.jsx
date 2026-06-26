@@ -3,7 +3,7 @@ import { useSignup } from '../hooks/useSignup.js'
 import { useNavigate } from 'react-router'
 import { ArrowLeft } from 'lucide-react'
 
-const Signup = () => {
+const SignUp = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -100,4 +100,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default SignUp
