@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import axios from "axios";
-import { LoaderIcon, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Navbar from "../components/Navbar";
 import { Footer } from "../components/Footer";
-import FeaturedActivityCard, {
-  FEATURED_ACTIVITIES,
-} from "../components/FeaturedActivityCards";
+import FeaturedActivityCard from "../components/FeaturedActivityCards";
+import { FEATURED_ACTIVITIES } from "../constants/featuredActivities";
 import TouristSpotCard from "../components/TouristSpotCard";
+import api from "../lib/axios";
 
 const heroSlideImages = [
   "https://images.unsplash.com/photo-1632307918787-8cb52566dd35?q=80&w=1025&auto=format&fit=crop",
@@ -92,12 +91,12 @@ const Overview = () => {
     const fetchTouristSpots = async () => {
       const startTime = Date.now();
       try {
-        const res = await axios.get("http://localhost:8080/api/spots/");
+        const res = await api.get("/spots");
         // Fetch reviews for each spot and calculate average rating
         const spotsWithRatings = await Promise.all(
           res.data.map(async (spot) => {
             try {
-              const reviewsRes = await axios.get(`http://localhost:8080/api/reviews/spot/${spot.DestinationID}`);
+              const reviewsRes = await api.get(`/reviews/spot/${spot.DestinationID}`);
               if (reviewsRes.data && reviewsRes.data.length > 0) {
                 const avgRating = (
                   reviewsRes.data.reduce((sum, review) => sum + review.Rating, 0) / 

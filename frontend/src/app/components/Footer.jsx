@@ -1,16 +1,6 @@
-import React, { useState } from "react";
-import { Compass, Send, Star, Phone, Mail } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 
-export const Footer = ({ onSubscribe, setActiveTab }) => {
-  const [email, setEmail] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email.trim() || !email.includes("@")) return;
-    onSubscribe(email.trim());
-    setEmail("");
-  };
-
+export const Footer = () => {
   return (
     <footer className="bg-[#141A17] text-[#FAF9F6] py-16 border-t border-[#1C2421] mt-20">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 items-start">

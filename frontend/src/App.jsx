@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from 'react-router'
 
 import Overview from './app/pages/Overview'

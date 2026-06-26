@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { LoaderIcon } from "lucide-react";
 import { Footer } from "../components/Footer.jsx";
@@ -75,11 +75,6 @@ const Activities = () => {
     setReviews(reviews.filter((review) => review.ReviewID !== reviewId));
   };
 
-  const handleEdit = (review) => {
-    // TODO: Open edit modal or navigate to edit page
-    console.log("Edit review:", review);
-    alert("Edit functionality coming soon");
-  };
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center gap-3">
@@ -94,7 +89,7 @@ const Activities = () => {
 
       {/* ── Hero Section ── */}
       <section id="hero">
-        <div className="relative w-full h-[70vh] min-h-95 flex flex-col justify-center items-center overflow-hidden bg-black">
+        <div className="relative w-full h-screen md:h-[70vh] min-h-95 flex flex-col justify-center items-center overflow-hidden bg-black">
           <motion.img
             initial={{ scale: 1.1, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -200,7 +195,6 @@ const Activities = () => {
                   <UserReviewCard
                     review={review}
                     onDelete={handleDelete}
-                    onEdit={handleEdit}
                   />
                 </motion.div>
               ))}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router"; 
-import { LoaderIcon, NotebookPen, MapPin, ChevronDown, ChevronUp, Ticket, Star } from "lucide-react";
+import { NotebookPen, MapPin, ChevronDown, ChevronUp, Ticket, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../lib/axios.js";
 import ActivityCard from "../components/ActivityCard.jsx";
@@ -119,7 +119,7 @@ const TouristSpotDetails = () => {
             <img
               src={touristSpot.ImageURL}
               alt={touristSpot.Name}
-              className="w-300 h-100 object-cover rounded-2xl shadow-md"
+              className="w-full h-full object-cover rounded-2xl shadow-md"
             />
           </motion.figure>
 
@@ -221,7 +221,7 @@ const TouristSpotDetails = () => {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              className="w-full lg:w-130 h-150 border border-gray-200 shadow-sm rounded-xl"
+              className="w-full lg:w-130 h-full min-h-150 border border-gray-200 shadow-sm rounded-xl"
               title={`Map of ${touristSpot.Name}`}
             />
           </motion.section>

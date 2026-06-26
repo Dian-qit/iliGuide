@@ -1,4 +1,4 @@
-import { signup, login, getTourists, getTourist, updateTourist, deleteTourist } from '../models/touristModel.js'
+import { signup, login, getTourist, updateTourist, deleteTourist } from '../models/touristModel.js'
 import jwt from 'jsonwebtoken'
 
 // ── Token helper ──────────────────────────────────────────
@@ -35,8 +35,7 @@ export const loginTourist = async (req, res) => {
 
 export const getAllTourists = async (req, res, next) => {
     try {
-        const tourists = await getTourists()
-        res.send(tourists)
+        res.send([req.user.tourist])
     } catch (err) {
         next(err)
     }
@@ -44,6 +43,10 @@ export const getAllTourists = async (req, res, next) => {
 
 export const getTouristById = async (req, res, next) => {
     try {
+        if (Number(req.params.id) !== req.user.id) {
+            return res.status(403).send({ message: 'You can only access your own profile' })
+        }
+
         const tourist = await getTourist(req.params.id)
         if (tourist.length === 0) return res.status(404).send({ message: 'Tourist not found' })
         res.send(tourist[0])
@@ -54,6 +57,10 @@ export const getTouristById = async (req, res, next) => {
 
 export const updateTouristById = async (req, res, next) => {
     try {
+        if (Number(req.params.id) !== req.user.id) {
+            return res.status(403).send({ message: 'You can only update your own profile' })
+        }
+
         const { name, email } = req.body
         if (!name || !email) return res.status(400).send({ message: 'Name and email are required' })
         const tourist = await updateTourist(req.params.id, name, email)
@@ -66,6 +73,10 @@ export const updateTouristById = async (req, res, next) => {
 
 export const deleteTouristById = async (req, res, next) => {
     try {
+        if (Number(req.params.id) !== req.user.id) {
+            return res.status(403).send({ message: 'You can only delete your own profile' })
+        }
+
         const tourist = await getTourist(req.params.id)
         if (tourist.length === 0) return res.status(404).send({ message: 'Tourist not found' })
         await deleteTourist(req.params.id)

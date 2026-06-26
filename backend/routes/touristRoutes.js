@@ -7,6 +7,7 @@ import {
     updateTouristById,
     deleteTouristById
 } from '../controllers/touristController.js'
+import requireAuth from '../middleware/requireAuth.js'
 
 const touristRouter = Router()
 
@@ -15,9 +16,9 @@ touristRouter.post('/signup', signupTourist)
 touristRouter.post('/login',  loginTourist)
 
 // ── CRUD ──────────────────────────────────────────────────
-touristRouter.get('/',     getAllTourists)
-touristRouter.get('/:id',  getTouristById)
-touristRouter.put('/:id',  updateTouristById)
-touristRouter.delete('/:id', deleteTouristById)
+touristRouter.get('/', requireAuth, getAllTourists)
+touristRouter.get('/:id', requireAuth, getTouristById)
+touristRouter.put('/:id', requireAuth, updateTouristById)
+touristRouter.delete('/:id', requireAuth, deleteTouristById)
 
 export default touristRouter

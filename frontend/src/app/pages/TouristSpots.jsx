@@ -1,12 +1,10 @@
-import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { LoaderIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
 import TouristSpotCard from "../components/TouristSpotCard";
 import { Footer } from "../components/Footer.jsx";
 import Navbar from "../components/Navbar.jsx";
+import api from "../lib/axios.js";
 
 // Animation Variants
 const fadeInUp = {
@@ -38,14 +36,13 @@ const TouristSpots = () => {
     const fetchTouristSpots = async () => {
       const startTime = Date.now();
       try {
-        const res = await axios.get("http://localhost:8080/api/spots/");
-        console.log(res.data);
+        const res = await api.get("/spots");
         
         // Fetch reviews for each spot and calculate average rating
         const spotsWithRatings = await Promise.all(
           res.data.map(async (spot) => {
             try {
-              const reviewsRes = await axios.get(`http://localhost:8080/api/reviews/spot/${spot.DestinationID}`);
+              const reviewsRes = await api.get(`/reviews/spot/${spot.DestinationID}`);
               if (reviewsRes.data && reviewsRes.data.length > 0) {
                 const avgRating = (
                   reviewsRes.data.reduce((sum, review) => sum + review.Rating, 0) / 
@@ -88,7 +85,7 @@ const TouristSpots = () => {
 
         {/* ── Hero Section ── */}
         <section id="hero">
-          <div className="relative w-full h-[70vh] min-h-95 flex flex-col justify-center items-center overflow-hidden">
+          <div className="relative w-full h-screen md:h-[70vh] min-h-95 flex flex-col justify-center items-center overflow-hidden">
             <motion.img
               initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}

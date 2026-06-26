@@ -14,8 +14,10 @@ export const useSignup = () => {
     try {
       const res = await api.post('/tourists/signup', { name, email, password })
       const tourist = res.data.tourist
+      const token = res.data.token
 
       localStorage.setItem('tourist', JSON.stringify(tourist))
+      localStorage.setItem('token', token)
       dispatch({ type: 'LOGIN', payload: tourist })
       return true
     } catch (err) {

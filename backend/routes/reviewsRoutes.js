@@ -7,6 +7,7 @@ import {
     updateReviewById,
     deleteReviewById
 } from '../controllers/reviewsController.js'
+import requireAuth from '../middleware/requireAuth.js'
 
 const reviewsRouter = Router()
 
@@ -20,12 +21,12 @@ reviewsRouter.get("/spot/:destinationId", getReviewsBySpotId)
 reviewsRouter.get("/:id", getReviewById)
 
 // POST a new review
-reviewsRouter.post("/", createNewReview)
+reviewsRouter.post("/", requireAuth, createNewReview)
 
 // PUT a review by id
-reviewsRouter.put("/:id", updateReviewById)
+reviewsRouter.put("/:id", requireAuth, updateReviewById)
 
 // DELETE a review by id
-reviewsRouter.delete("/:id", deleteReviewById)
+reviewsRouter.delete("/:id", requireAuth, deleteReviewById)
 
 export default reviewsRouter

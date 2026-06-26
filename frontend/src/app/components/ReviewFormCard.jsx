@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { X, Star } from 'lucide-react'
 import { Link } from 'react-router'
 import api from '../lib/axios.js'
@@ -13,7 +13,6 @@ const RATING_LABELS = {
 }
 
 const ReviewFormCard = ({ spotId, spotName, onClose, onReviewSubmitted }) => {
-  const [touristId, setTouristId]   = useState('')
   const [rating, setRating]         = useState(5)
   const [comment, setComment]       = useState('')
   const [hoveredStar, setHoveredStar] = useState(null)
@@ -27,10 +26,8 @@ const ReviewFormCard = ({ spotId, spotName, onClose, onReviewSubmitted }) => {
 
     try {
       await api.post('/reviews', {
-        touristId:    Number(touristId),
         destinationId: Number(spotId),
         rating,
-        reviewDate:   new Date().toISOString().split('T')[0],
         comment,
       })
       onReviewSubmitted()
@@ -44,12 +41,6 @@ const ReviewFormCard = ({ spotId, spotName, onClose, onReviewSubmitted }) => {
   }
 
   const { user } = useAuthContext()
-  useEffect(() => {
-    if (user) {
-      const id = user?.TouristID || user?.tourist?.TouristID || user?.id || user?.TouristId
-      if (id) setTouristId(String(id))
-    }
-  }, [user])
 
   // Close on backdrop click
   const handleBackdropClick = (e) => {

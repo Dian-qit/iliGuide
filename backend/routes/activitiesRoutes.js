@@ -7,6 +7,7 @@ import {
     updateActivityById,
     deleteActivityById
 } from '../controllers/activitiesController.js'
+import requireAuth from '../middleware/requireAuth.js'
 
 const activitiesRouter = Router()
 
@@ -20,12 +21,12 @@ activitiesRouter.get("/spot/:destinationId", getActivitiesBySpotId)
 activitiesRouter.get("/:id", getActivityById)
 
 // POST a new activity
-activitiesRouter.post("/", createNewActivity)
+activitiesRouter.post("/", requireAuth, createNewActivity)
 
 // PUT an activity by id
-activitiesRouter.put("/:id", updateActivityById)
+activitiesRouter.put("/:id", requireAuth, updateActivityById)
 
 // DELETE an activity by id
-activitiesRouter.delete("/:id", deleteActivityById)
+activitiesRouter.delete("/:id", requireAuth, deleteActivityById)
 
 export default activitiesRouter
