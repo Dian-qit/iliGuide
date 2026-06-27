@@ -119,7 +119,7 @@ const TouristSpotDetails = () => {
             <img
               src={touristSpot.ImageURL}
               alt={touristSpot.Name}
-              className="w-full h-full object-cover rounded-2xl shadow-md"
+              className="w-300 h-100 object-cover rounded-2xl shadow-md"
             />
           </motion.figure>
 
