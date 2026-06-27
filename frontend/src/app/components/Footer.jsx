@@ -67,7 +67,7 @@ export const Footer = () => {
 
 
       <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-[#1C2421] text-center text-[10px] uppercase tracking-widest text-gray-500 font-sans">
-        © 2026 IliGuide by Vincent Adrian Quitoriano. All Rights Reserved.
+        © 2026 IliGuide. All Rights Reserved.
       </div>
     </footer>
   );
